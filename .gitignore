@@ -1,0 +1,4 @@
+build/*
+*.swp
+scratch/*
+Makefile.inc
