@@ -1,4 +1,4 @@
-#include "foo.h"
+#include "barray.h"
 
 int main(int argc, char* argv[]) {
 	return 0;
