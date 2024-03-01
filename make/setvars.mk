@@ -1,5 +1,6 @@
 #if debug is not set, default to false
 DEBUG?=0
+ENABLE_D2X?=0
 
 # Query CFLAGS and LD_FLAGS from BuildIt
 # BuildIt doesn't have to be built for this
@@ -13,8 +14,8 @@ LDFLAGS=
 
 LDFLAGS+=-L$(BUILD_DIR) -l$(LIBRARY_NAME)
 
-CFLAGS+=$(shell make --no-print-directory -C $(BUILDIT_DIR)/ DEBUG=$(DEBUG) compile-flags)
-LDFLAGS+=$(shell make --no-print-directory -C $(BUILDIT_DIR)/ DEBUG=$(DEBUG) linker-flags)
+CFLAGS+=$(shell make --no-print-directory -C $(BUILDIT_DIR)/ DEBUG=$(DEBUG) ENABLE_D2X=$(ENABLE_D2X) compile-flags)
+LDFLAGS+=$(shell make --no-print-directory -C $(BUILDIT_DIR)/ DEBUG=$(DEBUG) ENABLE_D2X=$(ENABLE_D2X) linker-flags)
 
 DEPS=$(BUILD_DIR)/buildit.dep
 INCLUDE_FLAGS=-I $(INCLUDE_DIR)

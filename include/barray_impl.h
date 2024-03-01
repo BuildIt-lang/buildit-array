@@ -3,9 +3,19 @@
 
 #include "builder/dyn_var.h"
 #include "builder/static_var.h"
+#include "blocks/extract_cuda.h"
 #include "runtime.h"
 
 namespace barray {
+
+
+enum current_device_t {
+	DEVICE_HOST,
+	DEVICE_GPU,
+};
+
+current_device_t current_device = DEVICE_HOST;
+
 
 // Base class for all expressions that can appear on the RHS of a =
 template <typename T>
@@ -61,6 +71,8 @@ struct barray {
 			return;
 		}
 		unsigned int index = indices.size();
+		if (current_device == DEVICE_GPU && indices.size() == 0)
+			builder::annotate(CUDA_KERNEL);
 		for(builder::dyn_var<int> i = 0; i < (int)m_sizes[index]; ++i) {
 			indices.push_back(i.addr());
 			induce_loop_at(indices, rhs);

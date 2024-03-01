@@ -7,10 +7,7 @@ void test_program(builder::dyn_var<int*> arr1, size_t dim1, size_t dim2, size_t 
 
 	z = 0;
 	w = 1;
-	for (builder::dyn_var<int> x = 0; x < 5; ++x) {
-		y = 5 + z + w * 2;
-		w = y;
-	}
+	y = z + w * 2;
 }
 
 

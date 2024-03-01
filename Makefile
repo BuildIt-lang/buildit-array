@@ -9,7 +9,7 @@ include make/verbose.mk
 all: executables $(LIBRARY)
 
 CHECK_CONFIG=1
-CONFIG_STR=DEBUG=$(DEBUG)
+CONFIG_STR=DEBUG=$(DEBUG) ENABLE_D2X=$(ENABLE_D2X)
 
 include make/stable_config.mk
 include make/deps.mk
