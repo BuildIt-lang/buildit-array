@@ -5,6 +5,9 @@
 
 namespace barray {
 
+
+// A simple type trait to identify if 
+// operators should be overloaded
 template <typename T>
 struct is_acceptable_rhs {
 	static const bool value = false;
@@ -56,6 +59,11 @@ typename std::enable_if<is_acceptable_rhs<T2>::value, const barray_expr<typename
 template <typename T1, typename T2>
 typename std::enable_if<is_acceptable_rhs<T2>::value, const barray_expr<typename is_acceptable_rhs<T1>::output_type>&>::type operator * (const T1& v1, const T2& v2) {
 	return *new barray_expr_mul<typename is_acceptable_rhs<T1>::output_type>(is_acceptable_rhs<T1>::cast(v1), is_acceptable_rhs<T2>::cast(v2));
+}
+
+template <typename T1, typename T2>
+typename std::enable_if<is_acceptable_rhs<T2>::value, const barray_expr<typename is_acceptable_rhs<T1>::output_type>&>::type cross (const T1& v1, const T2& v2) {
+	return *new barray_expr_cross<typename is_acceptable_rhs<T1>::output_type>(is_acceptable_rhs<T1>::cast(v1), is_acceptable_rhs<T2>::cast(v2));
 }
 
 
