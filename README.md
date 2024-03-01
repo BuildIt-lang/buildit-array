@@ -67,4 +67,21 @@ Next search for `TODO 4.2`. Here we can check if `is_constant` is set, and if it
 To further verify this, let's make sure the values are used properly, if the arrays are changed. Add the `y = z + w` expression inside a loop and add a second statement `w = y;` after the first one. Run and make sure the generated code is correct and the code is not using stale values for `w`. This works because BuildIt keeps track of all static values and merges loops only if they are exactly the same as the previous iteration. 
 
 
+### TODO 5: Map computations to GPU
 
+Next, we will map computations to the GPU to improve the performance of the code. BuildIt allows automatically mapping doubly nested loops to CUDA code by using a simple annotation. Check the BuildIt sample under `deps/buildit/sample/sample37.cpp` to see how this annotation works. Next search for `TODO 5`. We can see that this is right before the loop for a dimension is induced. If we add the annotation here for the first level, BuildIt will turn the next two loop levels into GPU blocks and threads. To decide whether compute is running on GPU or Host, we have a defined an enum `currect_device` which the user can set. Check this enum and conditionally add the annotation only on the outermost loop. 
+
+We have provided a helper routine `run_on_gpu` which accepts a lambda to run on GPU. Wrap the `y = z + w` in this function under a lambda and build and run the code. We can see that the compute is moved to a CUDA kernel and an appropriate call to the kernel is inserted in the host code. 
+
+We have also provided the funcitons `barray.to_device()` and `barray.to_host()` to move the data between host and GPU for compute. Insert `z.to_device()` and `w.to_device()` before the call to allocate buffers and move the data. 
+
+### TODO 6: Ensuring data is moved to the right device before compute
+
+What happens if we forget to move a particular array to the GPU before operating on it on the GPU. Comment out `z.to_device()` and check the generated code. We notice that BuildIt still generates the code but it is wrong. We need to assert that the data is in the right place just like before. Search for `TODO 6`. The `barrays` have a `static_var`, `current_storage` to check where they are currently stored. Assert that the arrays and the execution is in the right place. Build and run the sample to check that the assert should fail. 
+Uncomment the `z.to_device()` to check that the compiler now generates correct code. 
+
+### TODO 7: Implement cross product for 2D arrays
+For this TODO, we would want you to implement the cross product operator for arbitrary 2D barray expressions. The skeleton code and the `TODO 7` has been provided. A `samples/sample2.cpp` has also been provided to test the kernel. Fill in the implementation and check if the compiler generates correct code. 
+
+## D2X Debugging
+[D2X](https://buildit.so/d2x) is a companion library in BuildIt that allows debugging code through stages. D2X allows adding debugging support without a single line of code change. So there are no TODOs for this section. But the proces to enable D2X will be discussed and demonstrated in the tutorial. 
