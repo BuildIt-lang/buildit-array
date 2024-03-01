@@ -19,6 +19,13 @@ void generate_barray_program(F func_input, std::string fname, std::ostream &oss,
 	block::c_code_generator::generate_code(ast, oss, 0);
 }
 
+
+static void run_on_gpu(std::function<void(void)> func) {
+	current_device = DEVICE_GPU;
+	func();
+	current_device = DEVICE_HOST;
+}
+
 }
 
 
