@@ -107,20 +107,23 @@ struct barray {
 
 	// Helper function to induce loop nests and compute values
 	void induce_loop_at(std::vector<builder::dyn_var<int>*> indices, const barray_expr<T>& rhs) {
-		if (indices.size() == m_sizes.size()) {
+		unsigned int index = indices.size();
+
+		if (index == m_sizes.size()) {
 			if (current_device == DEVICE_HOST)
 				m_arr[compute_flat_index(indices)] = rhs.get_value_at(indices);
 			else 
 				m_device_arr[compute_flat_index(indices)] = rhs.get_value_at(indices);
 			return;
 		}
-		unsigned int index = indices.size();
-		if (current_device == DEVICE_GPU && indices.size() == 0)
-			builder::annotate(CUDA_KERNEL);
-		for(builder::dyn_var<int> i = 0; i < (int)m_sizes[index]; ++i) {
-			indices.push_back(i.addr());
-			induce_loop_at(indices, rhs);
-		}
+
+		builder::dyn_var<int> i = 0;
+		indices.push_back(i.addr());
+
+		// TODO 5: Map loop nests to GPU if current device is GPU
+
+		// TODO 2: Recursively induce loops for all dimensions
+		induce_loop_at(indices, rhs);
 	}
 
 	// Assignment operator overloads
@@ -134,12 +137,11 @@ struct barray {
 	void operator=(const T& value) {
 		int total_size = get_total_size();
 
-		for (builder::dyn_var<int> i = 0; i < total_size; ++i) 
-			m_arr[i] = value;	
+		// TODO 1: Initialize all elements of the array to value
+		
+		// TODO 4: Optimize arrays initialized to constants
 		current_storage = DEVICE_HOST;
 
-		//is_constant = true;	
-		//constant_val = value;
 	}
 
 	void operator=(const barray& other) {
@@ -192,7 +194,9 @@ struct barray_expr_array: public barray_expr<T>{
 	barray_expr_array(const struct barray<T>& array): m_array(array) {}
 
 	const builder::dyn_var<T> get_value_at(std::vector<builder::dyn_var<int>*> indices) const {
-		if (m_array.is_constant) return m_array.constant_val;
+		// TODO 6: Make sure the array is on the GPU if requested from GPU
+
+		// TODO 4.2: Optimize arrays initialized to constants
 		if (current_device == DEVICE_HOST)
 			return const_cast<builder::dyn_var<T*>&>(m_array.m_arr)[m_array.compute_flat_index(indices)];
 		else
@@ -280,10 +284,8 @@ struct barray_expr_cross: public barray_expr<T> {
 		std::vector<builder::dyn_var<int>*> indices1 = {indices[0], i.addr()};
 		std::vector<builder::dyn_var<int>*> indices2 = {i.addr(), indices[1]};
 		int len = expr1.get_expr_size()[1];
-		
-		for (; i < len; ++i) {
-			sum += expr1.get_value_at(indices1) * expr2.get_value_at(indices2);
-		}
+
+		// TODO: Implement cross product operator		
 
 		return sum;
 	}
