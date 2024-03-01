@@ -11,6 +11,8 @@ CFLAGS=-O3
 endif
 LDFLAGS=
 
+LDFLAGS+=-L$(BUILD_DIR) -l$(LIBRARY_NAME)
+
 CFLAGS+=$(shell make --no-print-directory -C $(BUILDIT_DIR)/ DEBUG=$(DEBUG) compile-flags)
 LDFLAGS+=$(shell make --no-print-directory -C $(BUILDIT_DIR)/ DEBUG=$(DEBUG) linker-flags)
 
@@ -19,4 +21,3 @@ INCLUDE_FLAGS=-I $(INCLUDE_DIR)
 
 LIBRARY=$(BUILD_DIR)/lib$(LIBRARY_NAME).a
 
-LDFLAGS+=-L$(BUILD_DIR) -l$(LIBRARY_NAME)
