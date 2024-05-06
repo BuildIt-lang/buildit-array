@@ -12,6 +12,8 @@ CFLAGS=-O3
 endif
 LDFLAGS=
 
+CFLAGS+=-std=c++11
+
 LDFLAGS+=-L$(BUILD_DIR) -l$(LIBRARY_NAME)
 
 CFLAGS+=$(shell make --no-print-directory -C $(BUILDIT_DIR)/ DEBUG=$(DEBUG) ENABLE_D2X=$(ENABLE_D2X) compile-flags)
