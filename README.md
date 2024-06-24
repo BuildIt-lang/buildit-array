@@ -1,6 +1,6 @@
 # BuildIt Array DSL
 
-This repo is the skeleton code for the CGO 2024 handson tutorial - [Building DSLs made easy with the BuildIt Framework](https://buildit.so/tutorial). 
+This repo is the skeleton code for the PLDI/CGO 2024 handson tutorial - [Building DSLs made easy with the BuildIt Framework](https://buildit.so/tutorial). 
 This repo can be run entirely on a Linux system (including WSL). You can also run it on MacOS, except for the debugging section, since D2X is currently not supported for MacOS.
 
 We will be implementing a BuildIt Array DSL which supports collective operations on array types just like numpy. Basic operations include pointwise additions, multiplications and cross products. More operations can be added in a similar way. The DSL supports code generation for CPUs and GPUs and supports debugging using D2X. We will implement simple whole program static analysis and transformations like correctness checks for GPU vs Host memory and constant propagation on arrays all the while writing a pure library implementation. 
