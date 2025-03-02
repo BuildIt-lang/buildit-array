@@ -4,6 +4,7 @@
 #include "builder/dyn_var.h"
 #include "builder/static_var.h"
 #include "blocks/extract_cuda.h"
+#include "builder/nd_var.h"
 #include "runtime.h"
 
 namespace barray {
@@ -38,11 +39,25 @@ struct barray_expr_const;
 template <typename T>
 struct barray_expr_array;
 
+struct barray_base {
+	static std::vector<barray_base*> registered_arrays;
+
+	barray_base();
+	virtual ~barray_base();
+
+
+	builder::nd_var<bool> device_required;
+	
+	virtual void to_device() = 0;
+	virtual void to_host() = 0;
+
+};
+
 
 // Basic barray class. This class provides the programming interface
 // for the barray language
 template <typename T>
-struct barray {
+struct barray: public barray_base {
 
 	// Members to keep track of data and sizes
 	builder::dyn_var<T*> m_arr = 0;

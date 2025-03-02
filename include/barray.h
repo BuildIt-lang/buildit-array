@@ -8,6 +8,8 @@
 
 namespace barray {
 
+void apply_gpu_fixups(block::block::Ptr ast);
+
 template <typename F, typename...OtherArgs>
 void generate_barray_program(F func_input, std::string fname, std::ostream &oss, OtherArgs...args) {
 	builder::builder_context ctx;
@@ -21,8 +23,10 @@ void generate_barray_program(F func_input, std::string fname, std::ostream &oss,
 #ifdef ENABLE_D2X
 	oss << "#include \"d2x_runtime/d2x_runtime.h\"\n";
 #endif
-	for (auto a : new_decls)
+	for (auto a : new_decls) {
+		apply_gpu_fixups(a);
 		block::c_code_generator::generate_code(a, oss, 0);
+	}
 #ifdef ENABLE_D2X
 	block::c_code_generator::generate_code_d2x(ast, oss, 0);
 #else
