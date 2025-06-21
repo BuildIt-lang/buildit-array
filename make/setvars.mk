@@ -1,5 +1,5 @@
-#if debug is not set, default to true
-DEBUG?=1
+#if debug is not set, default to false
+DEBUG?=0
 ENABLE_D2X?=0
 
 # Query CFLAGS and LD_FLAGS from BuildIt
